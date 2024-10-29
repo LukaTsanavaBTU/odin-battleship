@@ -23,7 +23,6 @@ function Gameboard() {
             }
             // Check if collides with another ship
             for (let i = 0; i < length; i++) {
-                console.log([x, y + i])
                 if(getCoordinates([x + i, y])["ship"]) {
                     return false;
                 }
@@ -35,7 +34,6 @@ function Gameboard() {
             }
             // Check if collides with another ship
             for (let i = 0; i < length; i++) {
-                console.log([x + i, y])
                 if(getCoordinates([x, y + i])["ship"]) {
                     return false;
                 }
