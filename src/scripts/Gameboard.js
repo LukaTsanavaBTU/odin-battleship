@@ -15,15 +15,44 @@ function Gameboard() {
         return board[y][x];
     }
 
+    function checkShipValidity([x, y], axis, length) {
+        if (axis === 0) {
+            // Check if out of bounds
+            if (x + length - 1 > 9) {
+                return false;
+            }
+            // Check if collides with another ship
+            for (let i = 0; i < length; i++) {
+                console.log([x, y + i])
+                if(getCoordinates([x + i, y])["ship"]) {
+                    return false;
+                }
+            }
+        } else {
+            // Check if out of bounds
+            if (y + length - 1 > 9) {
+                return false;
+            }
+            // Check if collides with another ship
+            for (let i = 0; i < length; i++) {
+                console.log([x + i, y])
+                if(getCoordinates([x, y + i])["ship"]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     function placeShip([x, y], axis, length) {
         const newShip = Ship(length);
         if (axis === 0) {
             for (let i = 0; i < length; i++) {
-                getCoordinates([x, y + i])["ship"] = newShip;
+                getCoordinates([x + i, y])["ship"] = newShip;
             }
         } else {
             for (let i = 0; i < length; i++) {
-                getCoordinates([x + i, y])["ship"] = newShip;
+                getCoordinates([x, y + i])["ship"] = newShip;
             }
         }
         shipsAlive += 1;
@@ -49,6 +78,7 @@ function Gameboard() {
 
     return {
         getCoordinates,
+        checkShipValidity,
         placeShip,
         receiveAttack,
         allSunk
