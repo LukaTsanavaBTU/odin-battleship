@@ -2,4 +2,11 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
-export {getRandomInt};
+function randomIndex(array) {
+    return Math.floor(Math.random() * array.length);
+} 
+
+export {
+    getRandomInt, 
+    randomElement
+};

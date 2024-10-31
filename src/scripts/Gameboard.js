@@ -15,10 +15,18 @@ function Gameboard() {
         return board[y][x];
     }
 
+    function checkCoordinateValidity([x, y]) {
+        if (x > 9 || x < 0 || y > 9 || y < 0) {
+            return false
+        } else {
+            return true;
+        }
+    }
+
     function checkShipValidity([x, y], axis, length) {
         if (axis === 0) {
             // Check if out of bounds
-            if (x + length - 1 > 9) {
+            if (!checkCoordinateValidity([x + length - 1, y])) {
                 return false;
             }
             // Check if collides with another ship
@@ -29,7 +37,7 @@ function Gameboard() {
             }
         } else {
             // Check if out of bounds
-            if (y + length - 1 > 9) {
+            if (!checkCoordinateValidity([x, y + length - 1])) {
                 return false;
             }
             // Check if collides with another ship
