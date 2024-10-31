@@ -6,7 +6,6 @@
     --font-clr: #EEEEEE;
     --font-clr-darker: #D6D5D5;
     --hit-clr: #FF568C;
-    
 }
 
 body {
@@ -41,10 +40,24 @@ main {
 }
 
 .grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 3px;
     height: 480px;
     width: 480px;
-    background-color: var(--font-clr);
+    background-color: var(--background-clr);
     border-radius: 20px;
+    overflow: hidden;
+}
+
+.grid-cell {
+    background-color: var(--font-clr);
+    &:hover {
+        background-color: var(--font-clr-darker);
+    }
+    &:active {
+        background-color: var(--font-clr);
+    }
 }
 
 .info {
