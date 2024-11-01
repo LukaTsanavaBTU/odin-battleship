@@ -84,6 +84,7 @@ function Gameboard() {
 
     return {
         getCoordinates,
+        checkCoordinateValidity,
         checkShipValidity,
         placeShip,
         receiveAttack,

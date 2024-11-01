@@ -8,5 +8,5 @@ function randomIndex(array) {
 
 export {
     getRandomInt, 
-    randomElement
+    randomIndex
 };

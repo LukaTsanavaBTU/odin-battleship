@@ -42,7 +42,7 @@ test("Attacks surrounding cells after landing hit", () => {
     const target = HumanPlayer();
     const targetBoard = target.getBoard();
     targetBoard.placeShip([5, 5], 0, 3);
-    cp.attackAt(target, [5, 5]); // Function for testing
+    cp.attackAt(target, {x: 5, y: 5, axis: null}); // Function for testing
     cp.attack(target);
     let hits = 0;
     [
@@ -57,3 +57,6 @@ test("Attacks surrounding cells after landing hit", () => {
     });
     expect(hits).toBe(1);
 });
+
+
+// Another test like the last one but more in-depth

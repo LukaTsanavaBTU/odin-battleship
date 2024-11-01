@@ -1,5 +1,5 @@
-import Gameboard from "./Gameboard";
-import { getRandomInt, randomIndex } from "./helpers";
+import Gameboard from "./Gameboard.js";
+import { getRandomInt, randomIndex } from "./helpers.js";
 
 function ComputerPlayer() {
     const board = Gameboard();
@@ -27,32 +27,26 @@ function ComputerPlayer() {
     }
 
     // Attack Logic
-    const memory = {
+    let memory = {
+        attacked: false,
         axis: null,
         queue: [],
     };
 
     function clearMemory() {
         memory = {
+            attacked: false,
             axis: null,
             queue: [],
         };
     }
 
     function attack(target) {
-        if (memory["attacking"]) {
-            if (memory["axis"] !== null) {
-                const queue = (memory["axis"] === 0) ? memory["queueX"] : memory["queueY"];
-                const index = randomIndex(queue);
-                const element = queue[index];
-                queue.splice(index, 1)
-                attackAt(target, element);
-            } else {
-                const index = randomIndex([...memory["queueX"], ...memory["queueY"]]);
-                const element = memory["queue"][index];
-                memory["queue"].splice(index, 1);
-                attackAt(target, element);
-            }
+        if (memory["attacked"]) {
+            const index = randomIndex(memory["queue"]);
+            const cell = memory["queue"][index];
+            memory["queue"].splice(index, 1)
+            attackAt(target, cell);
         } else {
             attackRandomly(target);
         }
@@ -65,7 +59,7 @@ function ComputerPlayer() {
             randX = getRandomInt(10);
             randY = getRandomInt(10);
         } while (targetBoard.getCoordinates([randX, randY])["isHit"] === true)
-        attackAt(target, [randX, randY]);
+        attackAt(target, {x: randX, y: randY, axis: null});
 
     }
 
@@ -75,13 +69,13 @@ function ComputerPlayer() {
         const hitCell = targetBoard.getCoordinates([x, y]);
         if (hitCell["ship"] && !hitCell["ship"].isSunk()) {
             const neighbors = [
-                {coordinate: [x + 1, y], axis: 0}, 
-                {coordinate: [x - 1, y], axis: 0}, 
-                {coordinate: [x, y + 1], axis: 1}, 
-                {coordinate: [x, y - 1], axis: 1}
+                {x: x + 1, y, axis: 0}, 
+                {x: x - 1, y, axis: 0}, 
+                {x, y: y + 1, axis: 1}, 
+                {x, y: y - 1, axis: 1}
             ].filter((cell) => {
-                return targetBoard.checkCoordinateValidity(cell["coordinate"])
-                    && !targetBoard.getCoordinates(cell["coordinate"])["isHit"];
+                return targetBoard.checkCoordinateValidity([cell["x"], cell["y"]])
+                    && !targetBoard.getCoordinates([cell["x"], cell["y"]])["isHit"];
             });
             if (!memory["axis"] && axis) {
                 // If the axis is unknown and it isn't our first hit, find out the axis
@@ -89,8 +83,9 @@ function ComputerPlayer() {
                 memory["queue"] = memory["queue"].filter((cell) => cell["axis"] === axis);
                 
             }
-            if (!memory["axis"]) {
-                // If axis is unknown and it is our first hit, add all valid neighboring cells to queue  
+            if (!memory["attacked"]) {
+                // If it is our first hit and so axis is unknown, add all valid neighboring cells to queue 
+                memory["attacked"] = true; 
                 neighbors.forEach((cell) => {
                     memory["queue"].push(cell);
                 });
