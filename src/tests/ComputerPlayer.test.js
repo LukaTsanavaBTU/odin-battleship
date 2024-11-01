@@ -42,7 +42,7 @@ test("Attacks surrounding cells after landing hit", () => {
     const target = HumanPlayer();
     const targetBoard = target.getBoard();
     targetBoard.placeShip([5, 5], 0, 3);
-    cp.attackAt(target, {x: 5, y: 5, axis: null}); // Function for testing
+    cp.attackAt(target, {x: 5, y: 5, axis: null});
     cp.attack(target);
     let hits = 0;
     [
@@ -58,5 +58,19 @@ test("Attacks surrounding cells after landing hit", () => {
     expect(hits).toBe(1);
 });
 
+test("Follows direction of ship after landing hit", () => {
+    const cp = ComputerPlayer();
+    const target = HumanPlayer();
+    const targetBoard = target.getBoard();
+    targetBoard.placeShip([2, 5], 0, 5);
+    cp.attackAt(target, {x: 2, y: 5, axis: null});
+    cp.attack(target);
+    cp.attack(target);
+    cp.attack(target);
+    cp.attack(target);
+    cp.attack(target);
+    cp.attack(target);
+    cp.attack(target);
+    expect(targetBoard.getCoordinates([6, 5])["ship"].isSunk()).toBe(true);
+});
 
-// Another test like the last one but more in-depth

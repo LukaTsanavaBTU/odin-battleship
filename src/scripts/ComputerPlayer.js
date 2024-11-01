@@ -77,7 +77,7 @@ function ComputerPlayer() {
                 return targetBoard.checkCoordinateValidity([cell["x"], cell["y"]])
                     && !targetBoard.getCoordinates([cell["x"], cell["y"]])["isHit"];
             });
-            if (!memory["axis"] && axis) {
+            if ((memory["axis"] === null) && (axis !== null)) {
                 // If the axis is unknown and it isn't our first hit, find out the axis
                 memory["axis"] = axis;
                 memory["queue"] = memory["queue"].filter((cell) => cell["axis"] === axis);
