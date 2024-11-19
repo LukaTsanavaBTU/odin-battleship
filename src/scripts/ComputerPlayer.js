@@ -31,6 +31,7 @@ function ComputerPlayer() {
         attacked: false,
         axis: null,
         queue: [],
+        hitList: [],
     };
 
     function clearMemory() {
@@ -38,6 +39,7 @@ function ComputerPlayer() {
             attacked: false,
             axis: null,
             queue: [],
+            hitList: [],
         };
     }
 
@@ -46,6 +48,8 @@ function ComputerPlayer() {
             const index = randomIndex(memory["queue"]);
             const cell = memory["queue"][index];
             memory["queue"].splice(index, 1)
+            console.log(cell);
+            console.log(memory.queue);
             attackAt(target, cell);
         } else {
             attackRandomly(target);
@@ -68,6 +72,7 @@ function ComputerPlayer() {
         targetBoard.receiveAttack([x, y]);
         const hitCell = targetBoard.getCoordinates([x, y]);
         if (hitCell["ship"] && !hitCell["ship"].isSunk()) {
+            memory["hitList"].push({x, y, axis});
             const neighbors = [
                 {x: x + 1, y, axis: 0}, 
                 {x: x - 1, y, axis: 0}, 
@@ -97,12 +102,39 @@ function ComputerPlayer() {
                     }
                 });
             }
-        } else if ((hitCell["ship"] && hitCell["ship"].isSunk()) || (memory["queue"].length === 0)) {
-            // There will be a bug here if there are several ships right next to each other, fix later
-            // Keep track of hit ship cells
-            // If queue is empty and ship has not been sunk, enqueue all hit ship cells and start attacking on opposite axis 
+        } else if (hitCell["ship"] && hitCell["ship"].isSunk()) {
+            // Make sure to record situations where one ship is sunk but existance of another neighboring ship is still known
+            console.log("ship is sunk");
             clearMemory();
+        } else if (memory["attacked"] && memory["queue"].length === 0) {
+            const newAxis = memory["axis"] === 0 ? 1 : 0;
+            const tempHitList = [...memory["hitList"]];
+            console.log(tempHitList);
+            clearMemory()
+            memory["attacked"] = true;
+            memory["axis"] = newAxis;
+            enqueueValidNeighbors(tempHitList, target);
         }
+    }
+
+    function enqueueValidNeighbors(cellsList, target) {
+        console.log("Enqueued");
+        const targetBoard = target.getBoard();
+        cellsList.forEach(({x: x, y : y}) => {
+            const neighbors = [
+                {x: x + 1, y, axis: 0}, 
+                {x: x - 1, y, axis: 0}, 
+                {x, y: y + 1, axis: 1}, 
+                {x, y: y - 1, axis: 1}
+            ].filter((cell) => {
+                return targetBoard.checkCoordinateValidity([cell["x"], cell["y"]])
+                    && !targetBoard.getCoordinates([cell["x"], cell["y"]])["isHit"]
+                    && cell["axis"] === memory["axis"];
+            });
+            neighbors.forEach((cell) => {
+                memory["queue"].push(cell);
+            })
+        });
     }
 
     return {
