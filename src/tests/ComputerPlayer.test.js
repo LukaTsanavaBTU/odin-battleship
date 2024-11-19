@@ -1,7 +1,3 @@
-/*
-- Correct behaviour when hitting enemy and discovering another neighboring ship
-*/
-
 import ComputerPlayer from "../scripts/ComputerPlayer.js";
 import HumanPlayer from "../scripts/HumanPlayer.js";
 
@@ -72,5 +68,23 @@ test("Follows direction of ship after landing hit", () => {
     cp.attack(target);
     cp.attack(target);
     expect(targetBoard.getCoordinates([6, 5])["ship"].isSunk()).toBe(true);
+});
+
+test("Recognizes when ships are next to each-other", () => {
+    const cp = ComputerPlayer();
+    const target = HumanPlayer();
+    const targetBoard = target.getBoard();
+    targetBoard.placeShip([3, 5], 0, 3);
+    targetBoard.placeShip([2, 4], 0, 3);
+    cp.attackAt(target, {x: 2, y: 5, axis: null});
+    cp.attackAt(target, {x: 2, y: 4, axis: 1});
+    cp.attack(target);
+    cp.attack(target);
+    cp.attack(target);
+    cp.attack(target);
+    cp.attack(target);
+    cp.attack(target);
+    expect(targetBoard.getCoordinates([3, 5])["ship"].isSunk()).toBe(true);
+    expect(targetBoard.getCoordinates([2, 4])["ship"].isSunk()).toBe(true);
 });
 
