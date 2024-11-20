@@ -34,6 +34,10 @@ function ComputerPlayer() {
         hitList: [],
     };
 
+    const permanentMemory = {
+        queue: [],
+    };
+
     function clearMemory() {
         memory = {
             attacked: false,
@@ -48,8 +52,6 @@ function ComputerPlayer() {
             const index = randomIndex(memory["queue"]);
             const cell = memory["queue"][index];
             memory["queue"].splice(index, 1)
-            console.log(cell);
-            console.log(memory.queue);
             attackAt(target, cell);
         } else {
             attackRandomly(target);
@@ -103,13 +105,16 @@ function ComputerPlayer() {
                 });
             }
         } else if (hitCell["ship"] && hitCell["ship"].isSunk()) {
-            // Make sure to record situations where one ship is sunk but existance of another neighboring ship is still known
-            console.log("ship is sunk");
+            const tempAxis = memory["axis"];
             clearMemory();
+            if (permanentMemory["queue"].length > 0) {
+                memory["queue"].push(...permanentMemory["queue"].pop());
+                memory["attacked"] = true;
+                memory["axis"] = tempAxis;
+            }
         } else if (memory["attacked"] && memory["queue"].length === 0) {
             const newAxis = memory["axis"] === 0 ? 1 : 0;
             const tempHitList = [...memory["hitList"]];
-            console.log(tempHitList);
             clearMemory()
             memory["attacked"] = true;
             memory["axis"] = newAxis;
@@ -118,7 +123,6 @@ function ComputerPlayer() {
     }
 
     function enqueueValidNeighbors(cellsList, target) {
-        console.log("Enqueued");
         const targetBoard = target.getBoard();
         cellsList.forEach(({x: x, y : y}) => {
             const neighbors = [
@@ -131,10 +135,9 @@ function ComputerPlayer() {
                     && !targetBoard.getCoordinates([cell["x"], cell["y"]])["isHit"]
                     && cell["axis"] === memory["axis"];
             });
-            neighbors.forEach((cell) => {
-                memory["queue"].push(cell);
-            })
+            permanentMemory["queue"].push(neighbors);
         });
+        memory["queue"].push(...permanentMemory["queue"].pop());
     }
 
     return {
