@@ -1,7 +1,8 @@
 function BoardCell() {
     return {
         ship: null,
-        isHit: false
+        isHit: false,
+        direction: "none",
     }
 }
 

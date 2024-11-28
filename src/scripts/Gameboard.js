@@ -55,10 +55,20 @@ function Gameboard() {
         if (axis === 0) {
             for (let i = 0; i < length; i++) {
                 getCoordinates([x + i, y])["ship"] = newShip;
+                if (i === 0) {
+                    getCoordinates([x + i, y])["direction"] = "left";
+                } else if (i === (length - 1)) {
+                    getCoordinates([x + i, y])["direction"] = "right";
+                }
             }
         } else {
             for (let i = 0; i < length; i++) {
                 getCoordinates([x, y + i])["ship"] = newShip;
+                if (i === 0) {
+                    getCoordinates([x, y + i])["direction"] = "up";
+                } else if (i === (length - 1)) {
+                    getCoordinates([x, y + i])["direction"] = "down";
+                }
             }
         }
         shipsAlive += 1;
