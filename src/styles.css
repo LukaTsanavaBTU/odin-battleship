@@ -42,6 +42,7 @@ main {
 .grid {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
     gap: 3px;
     height: 480px;
     width: 480px;
@@ -52,11 +53,54 @@ main {
 
 .grid-cell {
     background-color: var(--font-clr);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     &:hover {
-        background-color: var(--font-clr-darker);
+        filter: brightness(90%);
     }
     &:active {
-        background-color: var(--font-clr);
+        filter: brightness(100%);
+    }
+}
+
+.player .ship {
+    background-color: var(--player-ship-clr);
+}
+
+.enemy .ship {
+    background-color: var(--enemy-ship-clr);
+}
+
+.up {
+    border-radius: 20px 20px 0 0;
+}
+
+.down {
+    border-radius: 0 0 20px 20px;
+}
+
+.left {
+    border-radius: 20px 0 0 20px;
+}
+
+.right {
+    border-radius: 0 20px 20px 0;
+}
+
+.miss-marker {
+    width: 15px;
+    height: 15px;
+    background-color: var(--background-crl);
+    border-radius: 100%;
+}
+
+.strike-marker {
+    width: 20px;
+    height: 20px;
+    img {
+        width: fit-content;
+        height: fit-content;
     }
 }
 
