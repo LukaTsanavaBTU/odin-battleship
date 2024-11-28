@@ -15,6 +15,9 @@ const enemyBoard = enemy.getBoard();
 enemyBoard.placeShip([5, 3], 1, 3);
 enemyBoard.placeShip([2, 4], 1, 4);
 enemyBoard.placeShip([7, 2], 0, 2);
+enemyBoard.getCoordinates([2, 4])["isHit"] = true;
+enemyBoard.getCoordinates([7, 2])["isHit"] = true;
+enemyBoard.getCoordinates([3, 3])["isHit"] = true;
 
 drawGridEnemy(enemy);
 drawGridPlayer(player);

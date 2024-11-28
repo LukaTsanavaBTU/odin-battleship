@@ -40,13 +40,19 @@ function drawGridEnemy(enemy) {
             const cell =  board.getCoordinates([x, y]);
             const gridCell = document.createElement("div");
             gridCell.classList.add("grid-cell");
-            if (cell["ship"]) {
+            if (cell["isHit"] && cell["ship"]) {
                 gridCell.classList.add("ship")
-            }
-            if (cell["isHit"]) {
-                gridCell.classList.add("is-hit");
+                gridCell.classList.add("hit-strike");
+                const strikeImg = document.createElement("img");
+                strikeImg.setAttribute("src", "./media/hit-strike.png");
                 const hitMarker = document.createElement("div");
-                hitMarker.classList.add("hit-marker");
+                hitMarker.classList.add("strike-marker");
+                hitMarker.appendChild(strikeImg);
+                gridCell.appendChild(hitMarker);
+            } else if (cell["isHit"] && !cell["ship"]) {
+                gridCell.classList.add("hit-miss");
+                const hitMarker = document.createElement("div");
+                hitMarker.classList.add("miss-marker");                
                 gridCell.appendChild(hitMarker);
             }
             gridCell.dataset.x = x;
@@ -54,7 +60,6 @@ function drawGridEnemy(enemy) {
             grid.appendChild(gridCell);
         }
     }   
-    
 }
 
 export {drawGridPlayer, drawGridEnemy};
