@@ -38,18 +38,18 @@ test("Ship gets placed on the board - length 3, X axis", () => {
 test("Ship gets placed on the board - x axis", () => {
     const board = Gameboard();
     board.placeShip([5, 6], 0, 3); // Place ship of length 3 at (5; 6) coordinates at X axis
-    expect(board.getCoordinates([5, 6])["ship"]["direction"]).toBe("left");
-    expect(board.getCoordinates([6, 6])["ship"]["direction"]).toBe("none");
-    expect(board.getCoordinates([7, 6])["ship"]["direction"]).toBe("right");
+    expect(board.getCoordinates([5, 6])["direction"]).toBe("left");
+    expect(board.getCoordinates([6, 6])["direction"]).toBe("none");
+    expect(board.getCoordinates([7, 6])["direction"]).toBe("right");
 });
 
 test("Ship gets placed on the board - y axis", () => {
     const board = Gameboard();
     board.placeShip([2, 3], 1, 4); // Place ship of length 4 at (2; 3) coordinates at Y axis
-    expect(board.getCoordinates([2, 3])["ship"]["direction"]).toBe("up");
-    expect(board.getCoordinates([2, 4])["ship"]["direction"]).toBe("none");
-    expect(board.getCoordinates([2, 5])["ship"]["direction"]).toBe("none");
-    expect(board.getCoordinates([2, 6])["ship"]["direction"]).toBe("down");
+    expect(board.getCoordinates([2, 3])["direction"]).toBe("up");
+    expect(board.getCoordinates([2, 4])["direction"]).toBe("none");
+    expect(board.getCoordinates([2, 5])["direction"]).toBe("none");
+    expect(board.getCoordinates([2, 6])["direction"]).toBe("down");
 });
 
 // Check invalid ship placements
