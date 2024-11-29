@@ -92,13 +92,24 @@ function Gameboard() {
         return false;
     }
 
+    function resetBoard() {
+        shipsAlive = 0;
+        for (let y = 0; y < 10; y++) {
+            board[y] = [];
+            for (let x = 0; x < 10; x++) {
+                board[y][x] = BoardCell();
+            }
+        }
+    }
+
     return {
         getCoordinates,
         checkCoordinateValidity,
         checkShipValidity,
         placeShip,
         receiveAttack,
-        allSunk
+        allSunk,
+        resetBoard
     }
 }
 
