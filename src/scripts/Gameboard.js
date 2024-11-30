@@ -50,6 +50,33 @@ function Gameboard() {
         return true;
     }
 
+    function checkShipValidityRotation([x, y], axis, length) {
+        if (axis === 0) {
+            // Check if out of bounds
+            if (!checkCoordinateValidity([x + length - 1, y])) {
+                return false;
+            }
+            // Check if collides with another ship
+            for (let i = 1; i < length; i++) {
+                if(getCoordinates([x + i, y])["ship"]) {
+                    return false;
+                }
+            }
+        } else {
+            // Check if out of bounds
+            if (!checkCoordinateValidity([x, y + length - 1])) {
+                return false;
+            }
+            // Check if collides with another ship
+            for (let i = 1; i < length; i++) {
+                if(getCoordinates([x, y + i])["ship"]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     function placeShip([x, y], axis, length) {
         const newShip = Ship(length);
         if (axis === 0) {
@@ -76,6 +103,15 @@ function Gameboard() {
         shipsAlive += 1;
     }
 
+    function rotatedShipInfo([x, y]) {
+        const targetCell = getCoordinates([x, y])
+        const [startX, startY] = targetCell["shipStart"];
+        const startDirection = getCoordinates([startX, startY])["direction"];
+        const newAxis = (startDirection === "up") ? 0 : 1;
+        const length = targetCell["ship"]["length"];
+        return [[startX, startY], newAxis, length];
+    }
+
     function removeShip([x, y]) {
         const targetCell = getCoordinates([x, y])
         const [startX, startY] = targetCell["shipStart"];
@@ -93,13 +129,9 @@ function Gameboard() {
     }
 
     function rotateShip([x, y]) {
-        const targetCell = getCoordinates([x, y])
-        const [startX, startY] = targetCell["shipStart"];
-        const startDirection = getCoordinates([startX, startY])["direction"];
-        const newAxis = (startDirection === "up") ? 0 : 1;
-        const length = targetCell["ship"]["length"];
+        const rotatedInfo = rotatedShipInfo([x, y]);
         removeShip([x, y]);
-        placeShip([startX, startY], newAxis, length);
+        placeShip(...rotatedInfo);
     }
 
     function receiveAttack([x, y]) {
@@ -140,6 +172,8 @@ function Gameboard() {
         resetBoard,
         removeShip,
         rotateShip,
+        rotatedShipInfo,
+        checkShipValidityRotation,
     }
 }
 

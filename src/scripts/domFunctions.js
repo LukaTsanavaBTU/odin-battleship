@@ -3,16 +3,22 @@ function SingleplayerDomFunctions(enemy, player) {
     let gameEnded = false;
 
     // FOR TESTING
+    const playerBoard = player.getBoard();
+    playerBoard.placeShip([1, 4], 1, 5);
+    playerBoard.placeShip([2, 5], 1, 4);
+    playerBoard.placeShip([3, 6], 1, 3);
+    playerBoard.placeShip([4, 6], 1, 3);
+    playerBoard.placeShip([5, 7], 1, 2);
+
     function init() {
         const playerBoard = player.getBoard();
-        playerBoard.placeShip([2, 2], 0, 3);
-        playerBoard.placeShip([7, 4], 1, 4);
-        playerBoard.placeShip([1, 6], 0, 2);
+        playerBoard.placeShip([1, 4], 1, 5);
+        playerBoard.placeShip([2, 5], 1, 4);
+        playerBoard.placeShip([3, 6], 1, 3);
+        playerBoard.placeShip([4, 6], 1, 3);
+        playerBoard.placeShip([5, 7], 1, 2);
 
-        const enemyBoard = enemy.getBoard();
-        enemyBoard.placeShip([5, 3], 1, 3);
-        enemyBoard.placeShip([2, 4], 1, 4);
-        enemyBoard.placeShip([7, 2], 0, 2);
+        enemy.placeShips();
     }
     // FOR TESTING
 
@@ -44,7 +50,14 @@ function SingleplayerDomFunctions(enemy, player) {
                 gridCell.classList.add("grid-cell");
                 gridCell.classList.add(cell["direction"]);
                 if (cell["ship"]) {
-                    gridCell.classList.add("ship")
+                    gridCell.classList.add("ship");
+                    gridCell.addEventListener("contextmenu", (e) => {
+                        e.preventDefault();
+                        if (board.checkShipValidityRotation(...board.rotatedShipInfo([x, y]))) {
+                            board.rotateShip([x, y]);
+                            drawGridPlayer();
+                        }    
+                    });
                 }
                 if (cell["isHit"] && cell["ship"]) {
                     gridCell.classList.add("hit-strike");
@@ -126,6 +139,10 @@ function SingleplayerDomFunctions(enemy, player) {
         }
     }
 
+    function shipRotateEventHandler() {
+
+    }
+
     function gameEndHandler() {
         player.getBoard().resetBoard();
         enemy.getBoard().resetBoard();
@@ -136,7 +153,6 @@ function SingleplayerDomFunctions(enemy, player) {
 
     return {drawGridEnemy, drawGridPlayer};
 }
-
 
 
 export default SingleplayerDomFunctions;
