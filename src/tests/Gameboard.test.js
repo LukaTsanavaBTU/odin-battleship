@@ -52,6 +52,17 @@ test("Ship gets placed on the board - y axis", () => {
     expect(board.getCoordinates([2, 6])["direction"]).toBe("down");
 });
 
+// Placed ships know starting coordinates
+
+test("Ship starting coordinates get saved correctly", () => {
+    const board = Gameboard();
+    board.placeShip([2, 3], 1, 4); // Place ship of length 4 at (2; 3) coordinates at Y axis
+    expect(board.getCoordinates([2, 3])["shipStart"]).toStrictEqual([2, 3]);
+    expect(board.getCoordinates([2, 4])["shipStart"]).toStrictEqual([2, 3]);
+    expect(board.getCoordinates([2, 5])["shipStart"]).toStrictEqual([2, 3]);
+    expect(board.getCoordinates([2, 6])["shipStart"]).toStrictEqual([2, 3]);
+});
+
 // Check invalid ship placements
 
 test("Identify valid ship placement", () => {

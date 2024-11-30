@@ -55,6 +55,7 @@ function Gameboard() {
         if (axis === 0) {
             for (let i = 0; i < length; i++) {
                 getCoordinates([x + i, y])["ship"] = newShip;
+                getCoordinates([x + i, y])["shipStart"] = [x, y];
                 if (i === 0) {
                     getCoordinates([x + i, y])["direction"] = "left";
                 } else if (i === (length - 1)) {
@@ -64,6 +65,7 @@ function Gameboard() {
         } else {
             for (let i = 0; i < length; i++) {
                 getCoordinates([x, y + i])["ship"] = newShip;
+                getCoordinates([x, y + i])["shipStart"] = [x, y];
                 if (i === 0) {
                     getCoordinates([x, y + i])["direction"] = "up";
                 } else if (i === (length - 1)) {
