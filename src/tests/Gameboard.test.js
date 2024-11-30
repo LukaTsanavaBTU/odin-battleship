@@ -90,6 +90,18 @@ test("Ships cant collide", () => {
     expect(validity).toBe(false); 
 });
 
+// Ship removal
+
+test.only("Ship gets removed correctly", () => {
+    const board = Gameboard();
+    board.placeShip([4, 6], 0, 4); // Place ship of length 4 at (4; 6) coordinates at X axis
+    board.removeShip([4, 6]);
+    expect(board.getCoordinates([4, 6])["ship"]).toBeFalsy();
+    expect(board.getCoordinates([5, 6])["ship"]).toBeFalsy();;
+    expect(board.getCoordinates([6, 6])["ship"]).toBeFalsy();
+    expect(board.getCoordinates([7, 8])["ship"]).toBeFalsy();
+});
+
 // Attack logic
 
 test("Missed shots get recorded", () => {

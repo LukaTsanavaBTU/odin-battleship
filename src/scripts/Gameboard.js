@@ -76,6 +76,22 @@ function Gameboard() {
         shipsAlive += 1;
     }
 
+    function removeShip([x, y]) {
+        const targetCell = getCoordinates([x, y])
+        const [startX, startY] = targetCell["shipStart"];
+        const startDirection = targetCell["direction"];
+        const length = targetCell["ship"]["length"];
+        if (startDirection === "left") {
+            for (let i = 0; i < length; i++) {
+                board[startY][startX + i] = BoardCell();
+            }
+        } else {
+            for (let i = 0; i < length; i++) {
+                board[startY + i][startX] = BoardCell();
+            }
+        }
+    }
+
     function receiveAttack([x, y]) {
         const currentCell = getCoordinates([x, y])
         currentCell["isHit"] = true;
@@ -111,7 +127,8 @@ function Gameboard() {
         placeShip,
         receiveAttack,
         allSunk,
-        resetBoard
+        resetBoard,
+        removeShip,
     }
 }
 
