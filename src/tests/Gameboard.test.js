@@ -92,7 +92,7 @@ test("Ships cant collide", () => {
 
 // Ship removal
 
-test.only("Ship gets removed correctly", () => {
+test("Ship gets removed correctly - starting coordinates", () => {
     const board = Gameboard();
     board.placeShip([4, 6], 0, 4); // Place ship of length 4 at (4; 6) coordinates at X axis
     board.removeShip([4, 6]);
@@ -100,6 +100,56 @@ test.only("Ship gets removed correctly", () => {
     expect(board.getCoordinates([5, 6])["ship"]).toBeFalsy();;
     expect(board.getCoordinates([6, 6])["ship"]).toBeFalsy();
     expect(board.getCoordinates([7, 8])["ship"]).toBeFalsy();
+});
+
+test("Ship gets removed correctly - non-starting coordinates", () => {
+    const board = Gameboard();
+    board.placeShip([4, 6], 0, 4); // Place ship of length 4 at (4; 6) coordinates at X axis
+    board.removeShip([6, 6]);
+    expect(board.getCoordinates([4, 6])["ship"]).toBeFalsy();
+    expect(board.getCoordinates([5, 6])["ship"]).toBeFalsy();;
+    expect(board.getCoordinates([6, 6])["ship"]).toBeFalsy();
+    expect(board.getCoordinates([7, 8])["ship"]).toBeFalsy();
+});
+
+// Ship Rotation
+
+test("Ship gets rotated correctly - X axis to Y axis", () => {
+    const board = Gameboard();
+    board.placeShip([4, 5], 0, 4); // Place ship of length 4 at (4; 5) coordinates at X axis
+    board.rotateShip([4, 5]);
+    expect(board.getCoordinates([4, 5])["ship"]).toBeTruthy();
+    expect(board.getCoordinates([4, 6])["ship"]).toBeTruthy();
+    expect(board.getCoordinates([4, 7])["ship"]).toBeTruthy();
+    expect(board.getCoordinates([4, 8])["ship"]).toBeTruthy();
+
+    expect(board.getCoordinates([5, 5])["ship"]).toBeFalsy();;
+    expect(board.getCoordinates([6, 5])["ship"]).toBeFalsy();
+    expect(board.getCoordinates([7, 5])["ship"]).toBeFalsy();
+});
+
+test("Ship gets rotated correctly - Y axis to X axis", () => {
+    const board = Gameboard();
+    board.placeShip([4, 5], 1, 3); // Place ship of length 3 at (4; 5) coordinates at Y axis
+    board.rotateShip([4, 5]);
+    expect(board.getCoordinates([4, 5])["ship"]).toBeTruthy();
+    expect(board.getCoordinates([5, 5])["ship"]).toBeTruthy();
+    expect(board.getCoordinates([6, 5])["ship"]).toBeTruthy();
+
+    expect(board.getCoordinates([4, 6])["ship"]).toBeFalsy();;
+    expect(board.getCoordinates([4, 7])["ship"]).toBeFalsy();
+});
+
+test("Ship gets rotated correctly - non-starting coordinates", () => {
+    const board = Gameboard();
+    board.placeShip([4, 5], 1, 3); // Place ship of length 3 at (4; 5) coordinates at Y axis
+    board.rotateShip([4, 6]);
+    expect(board.getCoordinates([4, 5])["ship"]).toBeTruthy();
+    expect(board.getCoordinates([5, 5])["ship"]).toBeTruthy();
+    expect(board.getCoordinates([6, 5])["ship"]).toBeTruthy();
+
+    expect(board.getCoordinates([4, 6])["ship"]).toBeFalsy();;
+    expect(board.getCoordinates([4, 7])["ship"]).toBeFalsy();
 });
 
 // Attack logic
