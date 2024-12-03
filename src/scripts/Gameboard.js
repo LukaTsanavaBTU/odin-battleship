@@ -77,6 +77,37 @@ function Gameboard() {
         return true;
     }
 
+    function checkShipValidityMoving([oldX, oldY], [x, y], axis, length) {
+        const oldShipCells = getShipCells([oldX, oldY]).map((cell) => JSON.stringify(cell));
+
+        if (axis === 0) {
+            // Check if out of bounds
+            if (!checkCoordinateValidity([x + length - 1, y])) {
+                return false;
+            }
+            // Check if collides with another ship
+            for (let i = 0; i < length; i++) {
+                if(getCoordinates([x + i, y])["ship"] 
+                && !oldShipCells.includes(JSON.stringify({y, x: x + i}))) {
+                    return false;
+                }
+            }
+        } else {
+            // Check if out of bounds
+            if (!checkCoordinateValidity([x, y + length - 1])) {
+                return false;
+            }
+            // Check if collides with another ship
+            for (let i = 0; i < length; i++) {
+                if(getCoordinates([x, y + i])["ship"]
+                && !oldShipCells.includes(JSON.stringify({y: y + i, x}))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     function placeShip([x, y], axis, length) {
         const newShip = Ship(length);
         if (axis === 0) {
@@ -134,6 +165,42 @@ function Gameboard() {
         placeShip(...rotatedInfo);
     }
 
+    function getShipCells([x, y]) {
+        const shipCells = [];
+        const targetCell = getCoordinates([x, y])
+        const [startX, startY] = targetCell["shipStart"];
+        const startDirection = getCoordinates([startX, startY])["direction"];
+        const length = targetCell["ship"]["length"];
+        if (startDirection === "left") {
+            for (let i = 0; i < length; i++) {
+                shipCells.push({y: startY, x: startX + i});
+            }
+        } else {
+            for (let i = 0; i < length; i++) {
+                shipCells.push({y: startY + i, x: startX});
+            }
+        }
+        return shipCells;
+    }
+
+    function getShipCellsRelative([x, y]) {
+        const shipCells = [];
+        const targetCell = getCoordinates([x, y])
+        const [startX, startY] = targetCell["shipStart"];
+        const startDirection = getCoordinates([startX, startY])["direction"];
+        const length = targetCell["ship"]["length"];
+        if (startDirection === "left") {
+            for (let i = 0; i < length; i++) {
+                shipCells.push([(startX + i) - x, startY - y]);
+            }
+        } else {
+            for (let i = 0; i < length; i++) {
+                shipCells.push([startX - x, (startY + i) - y]); 
+            }
+        }
+        return shipCells;
+    }
+
     function receiveAttack([x, y]) {
         const currentCell = getCoordinates([x, y])
         currentCell["isHit"] = true;
@@ -174,6 +241,9 @@ function Gameboard() {
         rotateShip,
         rotatedShipInfo,
         checkShipValidityRotation,
+        checkShipValidityMoving,
+        getShipCells,
+        getShipCellsRelative,
     }
 }
 

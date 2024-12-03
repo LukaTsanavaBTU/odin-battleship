@@ -6,6 +6,7 @@
     --font-clr: #EEEEEE;
     --font-clr-darker: #D6D5D5;
     --hit-clr: #FF568C;
+    --valid-clr: #8CFF56;
 }
 
 body {
@@ -135,4 +136,18 @@ button:active {
 
 .hidden {
     display: none;
+}
+
+.player .ship.dragged-along {
+    filter: saturate(40%);
+}
+
+.preview.valid {
+    border: 2px solid var(--valid-clr);
+    border-radius: 10px;
+}
+
+.preview.invalid {
+    border: 2px solid var(--hit-clr);
+    border-radius: 10px;
 }

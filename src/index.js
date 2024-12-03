@@ -6,5 +6,3 @@ const player = HumanPlayer();
 const enemy = ComputerPlayer();
 
 const dom = SingleplayerDomFunctions(enemy, player);
-dom.drawGridEnemy();
-dom.drawGridPlayer();
