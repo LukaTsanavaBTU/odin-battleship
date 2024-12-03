@@ -161,23 +161,32 @@ function SingleplayerDomFunctions(enemy, player) {
         const allShipCells = grid.querySelectorAll(".ship");
         const dragInvis = document.querySelector(".drag-invis");
 
-        let relativeShipPositions = [];
         let valid;
+        const dragged = {};
 
         allShipCells.forEach((cell) => {
             cell.setAttribute("draggable", "true");
+
             cell.addEventListener("dragstart", (e) => {
                 e.dataTransfer.setDragImage(dragInvis, 0, 0);
                 cell.classList.add("dragging");
-                relativeShipPositions = board.getShipCellsRelative([cell.dataset.x, cell.dataset.y]);
+                dragged["x"] = Number(cell.dataset.x);
+                dragged["y"] = Number(cell.dataset.y);
+                dragged["startX"] = board.getCoordinates([dragged["x"], dragged["y"]])["shipStart"][0];
+                dragged["startY"] = board.getCoordinates([dragged["x"], dragged["y"]])["shipStart"][1];
+                dragged["deltaX"] = dragged["startX"] - dragged["x"];
+                dragged["deltaY"] = dragged["startY"] - dragged["y"];
+                dragged["axis"] =  board.getCoordinates([dragged["startX"], dragged["startY"]])["direction"] == "up" ? 1 : 0;
+                dragged["relativeShipPositions"] = board.getShipCellsRelative([cell.dataset.x, cell.dataset.y]);
                 const shipGridCells = [];
-                relativeShipPositions.forEach(([x, y]) => {
+                dragged["relativeShipPositions"].forEach(([x, y]) => {
                     shipGridCells.push(grid.querySelector(`[data-x="${Number(cell.dataset.x) + x}"][data-y="${Number(cell.dataset.y) + y}"]`));
                 });
                 shipGridCells.forEach((gridCell) => {
                     gridCell.classList.add("dragged-along");
                 });
             });
+
             cell.addEventListener("dragend", () => {
                 cell.classList.remove("dragging");
                 grid.querySelectorAll(".dragged-along").forEach((element) => {
@@ -188,7 +197,6 @@ function SingleplayerDomFunctions(enemy, player) {
                     previewCell.classList.remove("valid");
                     previewCell.classList.remove("invalid");
                 });
-                relativeShipPositions = [];
             });
         });
 
@@ -200,28 +208,19 @@ function SingleplayerDomFunctions(enemy, player) {
             cell.addEventListener("dragover", (e) => {
                 e.preventDefault();
             });
-            cell.addEventListener("dragenter", () => {
-                const draggedElement = grid.querySelector(".dragging");
-                const [oldX, oldY] = [Number(draggedElement.dataset.x), Number(draggedElement.dataset.y)];
-                const [oldStartX, oldStartY] = board.getCoordinates([oldX, oldY])["shipStart"];
-                const oldAxis = board.getCoordinates([oldStartX, oldStartY])["direction"] == "up" ? 1 : 0;
 
+            cell.addEventListener("dragenter", () => {
                 const [x, y] = [Number(cell.dataset.x), Number(cell.dataset.y)]
-                const startDeltaX = oldStartX - oldX;
-                const startDeltaY = oldStartY - oldY;
-                
                 const previewCells = [];
                 const absolutePositions = [];
-
-                relativeShipPositions.forEach(([relX, relY]) => {
+                dragged["relativeShipPositions"].forEach(([relX, relY]) => {
                     const absolutePos = [x + relX, y + relY];
                     absolutePositions.push(absolutePos);
                 });
                 absolutePositions.forEach(([absX, absY]) => {
                     const previewCell = grid.querySelector(`[data-x="${absX}"][data-y="${absY}"]`);
                     valid = true;
-                    console.log(startDeltaX, startDeltaY);
-                    if (!board.checkShipValidityMoving([oldX, oldY], [x + startDeltaX, y + startDeltaY], oldAxis, absolutePositions.length)) {
+                    if (!board.checkShipValidityMoving([dragged["x"], dragged["y"]], [x + dragged["deltaX"], y + dragged["deltaY"]], dragged["axis"], absolutePositions.length)) {
                         valid = false;
                     }
                     if (previewCell) {
@@ -239,6 +238,7 @@ function SingleplayerDomFunctions(enemy, player) {
                     
                 });
             });
+
             cell.addEventListener("dragleave", () => {
                 grid.querySelectorAll(".preview").forEach((previewCell) => {
                     previewCell.classList.remove("preview");
@@ -246,6 +246,7 @@ function SingleplayerDomFunctions(enemy, player) {
                     previewCell.classList.remove("invalid");
                 });
             });
+
             cell.addEventListener("drop", () => {
                 if (valid) {
 
