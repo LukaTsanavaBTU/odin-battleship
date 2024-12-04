@@ -249,7 +249,12 @@ function SingleplayerDomFunctions(enemy, player) {
 
             cell.addEventListener("drop", () => {
                 if (valid) {
-
+                    const [x, y] = [Number(cell.dataset.x), Number(cell.dataset.y)];
+                    const [startX, startY] = [x + dragged["deltaX"], y + dragged["deltaY"]];
+                    board.removeShip([dragged["x"], dragged["y"]]);
+                    board.placeShip([startX, startY], dragged["axis"], dragged["relativeShipPositions"].length);
+                    drawGridPlayer();
+                    startSetupPhase();
                 }
             });
         });
