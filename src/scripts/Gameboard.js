@@ -157,6 +157,7 @@ function Gameboard() {
                 board[startY + i][startX] = BoardCell();
             }
         }
+        shipsAlive -= 1;
     }
 
     function rotateShip([x, y]) {
