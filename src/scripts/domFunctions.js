@@ -2,47 +2,44 @@ function SingleplayerDomFunctions(enemy, player) {
     let gameStarted = false;
     let gameEnded = false;
 
-    // FOR TESTING
-    const playerBoard = player.getBoard();
-    playerBoard.placeShip([1, 4], 1, 5);
-    playerBoard.placeShip([2, 5], 1, 4);
-    playerBoard.placeShip([3, 6], 1, 3);
-    playerBoard.placeShip([4, 6], 1, 3);
-    playerBoard.placeShip([5, 7], 1, 2);
-    drawGridEnemy();
-    drawGridPlayer();
-    startSetupPhase();
+    (() => {
+        placeDefaultPlayerShips();
+        drawGridEnemy();
+        drawGridPlayer();
+        startSetupPhase();
+    })();
 
-    function init() {
+    (() => {
+        const infoDiv = document.querySelector(".info");
+        const startButton = infoDiv.querySelector("button");
+        startButton.addEventListener("click", () => {
+            if (gameEnded) {
+                showStartMenu();
+                placeDefaultPlayerShips();
+                gameEnded = false;
+                gameStarted = false;
+                drawGridEnemy();
+                drawGridPlayer();
+                startSetupPhase();
+            } else if (!gameEnded && !gameStarted) {
+                enemy.placeShips();  
+                endSetupPhase();
+                hideMenu(); 
+                gameStarted = true;
+                gameEnded = false;  
+            }
+            
+        });
+    })();
+
+    function placeDefaultPlayerShips() {
         const playerBoard = player.getBoard();
         playerBoard.placeShip([1, 4], 1, 5);
         playerBoard.placeShip([2, 5], 1, 4);
         playerBoard.placeShip([3, 6], 1, 3);
         playerBoard.placeShip([4, 6], 1, 3);
         playerBoard.placeShip([5, 7], 1, 2);
-
-        enemy.placeShips();
-
-        endSetupPhase();
     }
-    // FOR TESTING
-
-    (() => {
-        const infoDiv = document.querySelector(".info");
-        const startButton = infoDiv.querySelector("button");
-        startButton.addEventListener("click", () => {
-            init();                  // TESTING LINE
-            drawGridEnemy();         // TESTING LINE
-            drawGridPlayer();        // TESTING LINE
-            // if (gameEnded) {
-            //     drawGridEnemy();
-            //     drawGridPlayer();
-            // }
-            gameStarted = true;
-            gameEnded = false;
-            infoDiv.classList.add("hidden");
-        });
-    })();
 
     function drawGridPlayer() {
         const grid = document.querySelector(".grid.player");
@@ -56,14 +53,16 @@ function SingleplayerDomFunctions(enemy, player) {
                 gridCell.classList.add(cell["direction"]);
                 if (cell["ship"]) {
                     gridCell.classList.add("ship");
-                    gridCell.addEventListener("contextmenu", (e) => {
-                        e.preventDefault();
-                        if (board.checkShipValidityRotation(...board.rotatedShipInfo([x, y]))) {
-                            board.rotateShip([x, y]);
-                            drawGridPlayer();
-                            startSetupPhase();
-                        }    
-                    });
+                    if (!gameStarted && !gameEnded) {
+                        gridCell.addEventListener("contextmenu", (e) => {
+                            e.preventDefault();
+                            if (board.checkShipValidityRotation(...board.rotatedShipInfo([x, y]))) {
+                                board.rotateShip([x, y]);
+                                drawGridPlayer();
+                                startSetupPhase();
+                            }    
+                        });
+                    }
                 }
                 if (cell["isHit"] && cell["ship"]) {
                     gridCell.classList.add("hit-strike");
@@ -149,9 +148,7 @@ function SingleplayerDomFunctions(enemy, player) {
         player.getBoard().resetBoard();
         enemy.getBoard().resetBoard();
         gameEnded = true;
-        const infoDiv = document.querySelector(".info");
-        infoDiv.classList.remove("hidden");
-        startSetupPhase();
+        showResetMenu();
     }
 
     function startSetupPhase() {
@@ -265,6 +262,28 @@ function SingleplayerDomFunctions(enemy, player) {
         shipCells.forEach((cell) => {
             cell.removeAttribute("draggable");
         });
+    }
+
+    function showResetMenu() {
+        const infoDiv = document.querySelector(".info");
+        const button = infoDiv.querySelector("button");
+        const infoParagraph = infoDiv.querySelector("p");
+        button.textContent = "Reset";
+        infoParagraph.classList.add("hidden");
+        infoDiv.classList.remove("hidden");
+    }
+
+    function showStartMenu() {
+        const infoDiv = document.querySelector(".info");
+        const button = infoDiv.querySelector("button");
+        const infoParagraph = infoDiv.querySelector("p");
+        button.textContent = "Start";
+        infoParagraph.classList.remove("hidden");
+    }
+
+    function hideMenu() {
+        const infoDiv = document.querySelector(".info");
+        infoDiv.classList.add("hidden");
     }
 
     return {drawGridEnemy, drawGridPlayer};
