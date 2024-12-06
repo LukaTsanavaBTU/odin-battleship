@@ -12,7 +12,6 @@ const dom = SingleplayerDomFunctions(enemy, player);
 TODO:
 - Animations;
 - More responsive webpage;
-- Reveal enemy ship locations after losing;
 - Readme file;
 
 DONE:
@@ -21,8 +20,12 @@ DONE:
 - Change "Click" to "Right Click" in description;
 - Add message after sinking ship (with name and length);
 - Proper win/lose message;
+- Reveal enemy ship locations after losing;
+- Show enemy ship shape after sinking;
 
 BUGS:
-- none detected for now
+- Sometimes enemy AI stops working when ships are next to each other 
+    (need to investigate more, maybe when finding another ship when firing at adjacent, 
+    so maybe just resort to firing randomly when error occurs);
 
 */

@@ -104,6 +104,9 @@ function SingleplayerDomFunctions(enemy, player) {
                     hitMarker.classList.add("strike-marker");
                     hitMarker.appendChild(strikeImg);
                     gridCell.appendChild(hitMarker);
+                    if (cell["ship"].isSunk()) {
+                        gridCell.classList.add(cell["direction"]);
+                    }
                 } else if (cell["isHit"] && !cell["ship"]) {
                     gridCell.classList.add("hit-miss");
                     const hitMarker = document.createElement("div");
@@ -126,6 +129,21 @@ function SingleplayerDomFunctions(enemy, player) {
         void messageBox.offsetWidth;
         messageBox.classList.add("message-anim");
     }
+
+    function revealEnemyShips() {
+        const grid = document.querySelector(".grid.enemy");
+        const board = enemy.getBoard();
+        for (let y = 0; y < 10; y++) {
+            for (let x = 0; x < 10; x++) {
+                const cell = board.getCoordinates([x, y]);
+                if (cell["ship"]) {
+                    const gridCell = grid.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+                    gridCell.classList.add("ship");
+                    gridCell.classList.add(cell["direction"]);
+                }
+            }
+        }  
+    }
     
     function attackEnemyEventHandler(x, y) {
         if (!gameEnded && gameStarted) {
@@ -145,6 +163,7 @@ function SingleplayerDomFunctions(enemy, player) {
                 drawGridPlayer();
                 if (player.getBoard().allSunk()) {
                     showMessage(`${player.name} Lost!`);
+                    revealEnemyShips();
                     gameEndHandler();
                     return;
                 }
