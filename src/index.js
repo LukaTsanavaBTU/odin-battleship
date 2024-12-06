@@ -10,7 +10,6 @@ const dom = SingleplayerDomFunctions(enemy, player);
 /*
   
 TODO:
-- Change "Click" to "Right Click" in description;
 - Add message after sinking ship (with name and length);
 - Proper win/lose message;
 - Animations;
@@ -21,6 +20,7 @@ TODO:
 DONE:
 - Make sure that permanent and non-permanent enemy memories don't carry over rounds (they may right now);
 - Ships dissapear when trying to place them above upper bounds;
+- Change "Click" to "Right Click" in description;
 
 BUGS:
 - none detected for now
