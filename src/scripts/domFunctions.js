@@ -117,26 +117,34 @@ function SingleplayerDomFunctions(enemy, player) {
             }
         }   
     }
+
+    function showMessage(message) {
+        const messageBox = document.querySelector(".message");
+        const messageParagraph = messageBox.querySelector("p");
+        messageParagraph.textContent = message;
+        messageBox.classList.remove("message-anim");
+        void messageBox.offsetWidth;
+        messageBox.classList.add("message-anim");
+    }
     
     function attackEnemyEventHandler(x, y) {
         if (!gameEnded && gameStarted) {
             const board = enemy.getBoard();
             if (!board.getCoordinates([x, y])["isHit"]) {
-                board.receiveAttack([x, y]);
+                const message = board.receiveAttack([x, y]);
                 drawGridEnemy();
+                if (message) {
+                    showMessage(`${player["name"]} has sunk ${enemy["name"]}'s ${message}`);
+                }
                 if (board.allSunk()) {
-                    setTimeout(() => {
-                        alert("Player Won!");
-                    }, 0);
+                    showMessage(`${player.name} Won!`);
                     gameEndHandler();
                     return;
                 }
                 enemy.attack(player);
                 drawGridPlayer();
                 if (player.getBoard().allSunk()) {
-                    setTimeout(() => {
-                        alert("Player Lost!");
-                    }, 0);
+                    showMessage(`${player.name} Lost!`);
                     gameEndHandler();
                     return;
                 }

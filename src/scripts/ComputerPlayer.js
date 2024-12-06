@@ -3,6 +3,7 @@ import { getRandomInt, randomIndex } from "./helpers.js";
 
 function ComputerPlayer() {
     const board = Gameboard();
+    const name = "Enemy";
 
     function getBoard() {
         return board;
@@ -151,7 +152,8 @@ function ComputerPlayer() {
         placeShips,
         attack,
         fullReset,
-        attackAt
+        attackAt,
+        name,
     }
 }
 

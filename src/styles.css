@@ -151,3 +151,50 @@ button:active {
     border: 2px solid var(--hit-clr);
     border-radius: 10px;
 }
+
+.message {
+    visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    width: 500px;
+    height: 200px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #222831ec;
+    border-radius: 10px;
+}
+
+.message-anim {
+    animation-name: message-pop;
+    animation-duration: 3s;
+    animation-fill-mode: forwards;
+}
+
+.message p {
+    width: 80%;
+    font-size: 24px;
+    text-align: center;
+}
+
+@keyframes message-pop {
+    0% {
+        visibility: visible;
+        opacity: 0%;
+    }
+
+    20% {
+        opacity: 100%;
+    }
+
+    80% {
+        opacity: 100%;
+    }
+
+    100% {
+        visibility: hidden;
+        opacity: 0%;
+    }
+}

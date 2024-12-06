@@ -202,13 +202,29 @@ function Gameboard() {
         return shipCells;
     }
 
+    function getShipName(length) {
+        switch (length) {
+            case 5:
+                return "Carrier" + ` (${length})`;
+            case 4:
+                return "Battleship" + ` (${length})`;
+            case 3:
+                return "Cruiser/Submarine" + ` (${length})`;
+            case 2:
+                return "Destroyer" + ` (${length})`;
+        }
+    }
+
     function receiveAttack([x, y]) {
-        const currentCell = getCoordinates([x, y])
+        const currentCell = getCoordinates([x, y]);
+        const currentShip = currentCell["ship"];
         currentCell["isHit"] = true;
-        if (currentCell["ship"]) {
-            currentCell["ship"].hit();
-            if (currentCell["ship"].isSunk()) {
+        if (currentShip) {
+            currentShip.hit();
+            if (currentShip.isSunk()) {
                 shipsAlive -= 1;
+                const shipName = getShipName(currentShip["length"]);
+                return shipName;
             }
         }
     }
