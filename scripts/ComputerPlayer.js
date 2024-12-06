@@ -3,6 +3,7 @@ import { getRandomInt, randomIndex } from "./helpers.js";
 
 function ComputerPlayer() {
     const board = Gameboard();
+    const name = "Enemy";
 
     function getBoard() {
         return board;
@@ -24,6 +25,12 @@ function ComputerPlayer() {
         placeRandomShip(3);
         placeRandomShip(3);
         placeRandomShip(2);
+    }
+
+    function fullReset() {
+        board.resetBoard();
+        clearMemory();
+        permanentMemory["queue"] = [];
     }
 
     // Attack Logic
@@ -144,7 +151,9 @@ function ComputerPlayer() {
         getBoard,
         placeShips,
         attack,
-        attackAt
+        fullReset,
+        attackAt,
+        name,
     }
 }
 

@@ -104,6 +104,9 @@ function SingleplayerDomFunctions(enemy, player) {
                     hitMarker.classList.add("strike-marker");
                     hitMarker.appendChild(strikeImg);
                     gridCell.appendChild(hitMarker);
+                    if (cell["ship"].isSunk()) {
+                        gridCell.classList.add(cell["direction"]);
+                    }
                 } else if (cell["isHit"] && !cell["ship"]) {
                     gridCell.classList.add("hit-miss");
                     const hitMarker = document.createElement("div");
@@ -117,26 +120,50 @@ function SingleplayerDomFunctions(enemy, player) {
             }
         }   
     }
+
+    function showMessage(message) {
+        const messageBox = document.querySelector(".message");
+        const messageParagraph = messageBox.querySelector("p");
+        messageParagraph.textContent = message;
+        messageBox.classList.remove("message-anim");
+        void messageBox.offsetWidth;
+        messageBox.classList.add("message-anim");
+    }
+
+    function revealEnemyShips() {
+        const grid = document.querySelector(".grid.enemy");
+        const board = enemy.getBoard();
+        for (let y = 0; y < 10; y++) {
+            for (let x = 0; x < 10; x++) {
+                const cell = board.getCoordinates([x, y]);
+                if (cell["ship"]) {
+                    const gridCell = grid.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+                    gridCell.classList.add("ship");
+                    gridCell.classList.add(cell["direction"]);
+                }
+            }
+        }  
+    }
     
     function attackEnemyEventHandler(x, y) {
         if (!gameEnded && gameStarted) {
             const board = enemy.getBoard();
             if (!board.getCoordinates([x, y])["isHit"]) {
-                board.receiveAttack([x, y]);
+                const message = board.receiveAttack([x, y]);
                 drawGridEnemy();
+                if (message) {
+                    showMessage(`${player["name"]} has sunk ${enemy["name"]}'s ${message}`);
+                }
                 if (board.allSunk()) {
-                    setTimeout(() => {
-                        alert("Player Won!");
-                    }, 0);
+                    showMessage(`${player.name} Won!`);
                     gameEndHandler();
                     return;
                 }
                 enemy.attack(player);
                 drawGridPlayer();
                 if (player.getBoard().allSunk()) {
-                    setTimeout(() => {
-                        alert("Player Lost!");
-                    }, 0);
+                    showMessage(`${player.name} Lost!`);
+                    revealEnemyShips();
                     gameEndHandler();
                     return;
                 }
@@ -145,8 +172,8 @@ function SingleplayerDomFunctions(enemy, player) {
     }
 
     function gameEndHandler() {
-        player.getBoard().resetBoard();
-        enemy.getBoard().resetBoard();
+        player.fullReset();
+        enemy.fullReset();
         gameEnded = true;
         showResetMenu();
     }
@@ -217,7 +244,8 @@ function SingleplayerDomFunctions(enemy, player) {
                 absolutePositions.forEach(([absX, absY]) => {
                     const previewCell = grid.querySelector(`[data-x="${absX}"][data-y="${absY}"]`);
                     valid = true;
-                    if (!board.checkShipValidityMoving([dragged["x"], dragged["y"]], [x + dragged["deltaX"], y + dragged["deltaY"]], dragged["axis"], absolutePositions.length)) {
+                    if (!board.checkCoordinateValidity([x + dragged["deltaX"], y + dragged["deltaY"]]) 
+                        || !board.checkShipValidityMoving([dragged["x"], dragged["y"]], [x + dragged["deltaX"], y + dragged["deltaY"]], dragged["axis"], absolutePositions.length)) {
                         valid = false;
                     }
                     if (previewCell) {
