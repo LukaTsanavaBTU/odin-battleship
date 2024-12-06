@@ -18,10 +18,11 @@ TODO:
 - Reveal enemy ship locations after losing;
 - Readme file;
 
-BUGS:
-- Ships dissapear when trying to place them above upper bounds;
-
 DONE:
 - Make sure that permanent and non-permanent enemy memories don't carry over rounds (they may right now);
+- Ships dissapear when trying to place them above upper bounds;
+
+BUGS:
+- none detected for now
 
 */

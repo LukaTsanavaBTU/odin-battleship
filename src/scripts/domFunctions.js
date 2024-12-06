@@ -217,7 +217,8 @@ function SingleplayerDomFunctions(enemy, player) {
                 absolutePositions.forEach(([absX, absY]) => {
                     const previewCell = grid.querySelector(`[data-x="${absX}"][data-y="${absY}"]`);
                     valid = true;
-                    if (!board.checkShipValidityMoving([dragged["x"], dragged["y"]], [x + dragged["deltaX"], y + dragged["deltaY"]], dragged["axis"], absolutePositions.length)) {
+                    if (!board.checkCoordinateValidity([x + dragged["deltaX"], y + dragged["deltaY"]]) 
+                        || !board.checkShipValidityMoving([dragged["x"], dragged["y"]], [x + dragged["deltaX"], y + dragged["deltaY"]], dragged["axis"], absolutePositions.length)) {
                         valid = false;
                     }
                     if (previewCell) {
