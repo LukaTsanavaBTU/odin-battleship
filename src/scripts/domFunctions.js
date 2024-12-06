@@ -145,8 +145,8 @@ function SingleplayerDomFunctions(enemy, player) {
     }
 
     function gameEndHandler() {
-        player.getBoard().resetBoard();
-        enemy.getBoard().resetBoard();
+        player.fullReset();
+        enemy.fullReset();
         gameEnded = true;
         showResetMenu();
     }

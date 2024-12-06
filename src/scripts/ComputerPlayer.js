@@ -26,6 +26,12 @@ function ComputerPlayer() {
         placeRandomShip(2);
     }
 
+    function fullReset() {
+        board.resetBoard();
+        clearMemory();
+        permanentMemory["queue"] = [];
+    }
+
     // Attack Logic
     let memory = {
         attacked: false,
@@ -144,6 +150,7 @@ function ComputerPlayer() {
         getBoard,
         placeShips,
         attack,
+        fullReset,
         attackAt
     }
 }

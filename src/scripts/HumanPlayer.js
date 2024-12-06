@@ -7,7 +7,12 @@ function HumanPlayer() {
         return board;
     }
 
+    function fullReset() {
+        board.resetBoard();
+    }
+
     return {
+        fullReset,
         getBoard
     }
 }
