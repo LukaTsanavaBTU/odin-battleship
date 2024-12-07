@@ -55,6 +55,7 @@ function ComputerPlayer() {
     }
 
     function attack(target) {
+        console.log(memory["queue"]);
         if (memory["attacked"]) {
             const index = randomIndex(memory["queue"]);
             const cell = memory["queue"][index];
@@ -119,7 +120,8 @@ function ComputerPlayer() {
                 memory["attacked"] = true;
                 memory["axis"] = tempAxis;
             }
-        } else if (memory["attacked"] && memory["queue"].length === 0) {
+        }
+        if (memory["attacked"] && memory["queue"].length === 0) {
             const newAxis = memory["axis"] === 0 ? 1 : 0;
             const tempHitList = [...memory["hitList"]];
             clearMemory()
