@@ -55,7 +55,6 @@ function ComputerPlayer() {
     }
 
     function attack(target) {
-        console.log(memory["queue"]);
         if (memory["attacked"]) {
             const index = randomIndex(memory["queue"]);
             const cell = memory["queue"][index];
