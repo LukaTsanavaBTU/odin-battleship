@@ -119,7 +119,8 @@ function ComputerPlayer() {
                 memory["attacked"] = true;
                 memory["axis"] = tempAxis;
             }
-        } else if (memory["attacked"] && memory["queue"].length === 0) {
+        }
+        if (memory["attacked"] && memory["queue"].length === 0) {
             const newAxis = memory["axis"] === 0 ? 1 : 0;
             const tempHitList = [...memory["hitList"]];
             clearMemory()
